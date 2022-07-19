@@ -93,16 +93,17 @@ class HorseTest {
         assertEquals(0, new Horse("Emma", 1).getDistance());
     }
 
-    @Test
-    void isMoveCorrect() {
+    @ParameterizedTest
+    @ValueSource(doubles = {0.2, 0.3, 0.4})
+    void isMoveCorrect(double argument) {
         try (MockedStatic<Horse> mockedStatic = Mockito.mockStatic(Horse.class)) {
-            Horse horse = new Horse("Emma", 1);
+            Horse horse = new Horse("Emma", 1, 444);
             double distance = horse.getDistance();
             horse.move();
             mockedStatic.verify(() -> Horse.getRandomDouble(0.2, 0.9));
-            mockedStatic.when(() -> Horse.getRandomDouble(0.2, 0.9)).thenReturn(0.2);
+            mockedStatic.when(() -> Horse.getRandomDouble(0.2, 0.9)).thenReturn(argument);
             horse.move();
-            assertEquals(horse.getDistance(), distance + horse.getSpeed() * 0.2);
+            assertEquals(horse.getDistance(), distance + horse.getSpeed() * argument);
         }
     }
 
